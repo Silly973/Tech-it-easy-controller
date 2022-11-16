@@ -1,6 +1,6 @@
 package com.example.TechItEasy.controllers;
 
-import exeptions.RecordNotFoundException;
+import com.example.TechItEasy.exeptions.RecordNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

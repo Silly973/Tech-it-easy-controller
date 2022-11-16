@@ -1,4 +1,4 @@
-package exeptions;
+package com.example.TechItEasy.exeptions;
 
 // 11. Extend de klasse met een RunTimeExeption
 public class RecordNotFoundException extends RuntimeException {
