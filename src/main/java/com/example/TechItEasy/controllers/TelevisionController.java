@@ -1,8 +1,15 @@
 package com.example.TechItEasy.controllers;
 
 import com.example.TechItEasy.exeptions.RecordNotFoundException;
+import com.example.TechItEasy.models.Television;
+import com.example.TechItEasy.repositories.TelevisionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.Optional;
 
 //-  4-6 Maak klasse aan voor TelevisionController en voorzie deze van annotatie, requests en response entities.
 //-  Je mag de volgende ResponseEntiteiten als return waardes gebruiken:
@@ -11,46 +18,87 @@ import org.springframework.web.bind.annotation.*;
 //ResponseEntiteit.noContent().build()
 
 @RestController
+@RequestMapping(path="television")
 public class TelevisionController {
 
-    //GET voor alle televisies (vraag alle tv's op)
-    @GetMapping("/televisions")
-    public ResponseEntity<Object> getAllTelevisions() {
-        return ResponseEntity.ok("televisions");
-    }
-    //alternatief: return new ResponseEntity<>(body:"televisions", HttpStatus.OK);
+    private final TelevisionRepository televisionRepository;
 
-    //GET voor 1 televisie (vraag 1 tv op bij id)
-    @GetMapping("televisions/{id}")
-    public ResponseEntity<Object> getTelevision(@PathVariable int id) {
-        if (id <10) {
-            return ResponseEntity.ok("televisie " + id + " gevonden!");
-        }else{
-            throw new RecordNotFoundException("ID helaas niet gevonden!");
+    @Autowired
+    public TelevisionController(TelevisionRepository televisionRepository) {
+        this.televisionRepository = televisionRepository;
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Object> getAllTelevisions() {
+        return ResponseEntity.ok(televisionRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getTelevision(@PathVariable Long id) {
+        Optional<Television> television = televisionRepository.findById(id);
+
+        if (television.isEmpty()) {
+            throw new RecordNotFoundException("No television found with id " + id);
+        } else {
+            Television television1 = television.get();
+
+            return ResponseEntity.ok("Television " + id);
         }
     }
-    //alternatief:
-    //public ResponsEntity<String> getTelevision(@PathVariable int id){
-    //return new ResponsEntity<>(body:"television"+ id, HttpStatus.ok);
 
-    //POST voor 1 televisie (voeg 1 tv toe) Hfst. 5.6 EHub
-    @PostMapping("/televisions")
-    public ResponseEntity<Object> addTelevision (@RequestBody String television) {
-       return ResponseEntity.created(null).body("television");
+    @PostMapping("")
+    public ResponseEntity<Object> addTelevision(@RequestBody Television television) {
+        televisionRepository.save(television);
+        URI uri = URI.create(
+                       ServletUriComponentsBuilder
+                                 .fromCurrentContextPath()
+                                  .path("/Television/" + television.getId()).toUriString());
+
+        return ResponseEntity.created(uri).body("Television is added!");
+
+       // return ResponseEntity.ok("Television added");
     }
 
-    //PUT Request voor 1 televisie (update 1 tv)
-    @PutMapping("/televisions/{id}")
-    public ResponseEntity<Object> updateTelevision(){
-        //je wijzigt iets, je vraagt niets op .noContent
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteTelevision (@PathVariable("id") Long id){
+        televisionRepository.deleteById(id);
+
         return ResponseEntity.noContent().build();
     }
 
-    //DELETE request voor 1 televisie
-    @DeleteMapping("/televisions")
-    public ResponseEntity<Object> deleteTelevision(){
-       return ResponseEntity.noContent().build();
+    @PutMapping("{id}")
+    public ResponseEntity<Object> updateTelevision(@PathVariable Long id, @RequestBody Television television) {
+        Optional<Television> optionalTelevision = televisionRepository.findById((Long) id);
+        if (optionalTelevision.isEmpty()) {
+            throw new RecordNotFoundException("No television found with id " + id);
+        } else {
+            Television updateTelevision = optionalTelevision.get();
+            updateTelevision.setType(television.getType());
+            updateTelevision.setBrand(television.getBrand());
+            updateTelevision.setName(television.getName());
+            updateTelevision.setPrice(television.getPrice());
+            updateTelevision.setAvailableSize(television.getAvailableSize());
+            updateTelevision.setRefreshRate(television.getRefreshRate());
+            updateTelevision.setScreenType(television.getScreenType());
+            updateTelevision.setScreenQuality(television.getScreenQuality());
+            updateTelevision.setSmartTv(television.getSmartTv());
+            updateTelevision.setWifi(television.getWifi());
+            updateTelevision.setVoiceControl(television.getVoiceControl());
+            updateTelevision.setHdr(television.getHdr());
+            updateTelevision.setBluetooth(television.getBluetooth());
+            updateTelevision.setAmbiLight(television.getAmbiLight());
+            updateTelevision.setOriginalStock(television.getOriginalStock());
+            updateTelevision.setSold(television.getSold());
+
+            televisionRepository.save(updateTelevision);
+            return ResponseEntity.ok(updateTelevision);
+
+        }
+
+
+
     }
-
-
 }
+
+
+
