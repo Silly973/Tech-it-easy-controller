@@ -24,15 +24,16 @@ public class TelevisionController {
     private final TelevisionRepository televisionRepository;
 
     @Autowired
-    public TelevisionController(TelevisionRepository televisionRepository) {
+    public TelevisionController(TelevisionRepository televisionRepository) { //repository van de database
         this.televisionRepository = televisionRepository;
     }
-
+    //GET voor alle tv's
     @GetMapping("")
     public ResponseEntity<Object> getAllTelevisions() {
         return ResponseEntity.ok(televisionRepository.findAll());
     }
 
+    //GET voor 1 tv
     @GetMapping("/{id}")
     public ResponseEntity<Object> getTelevision(@PathVariable Long id) {
         Optional<Television> television = televisionRepository.findById(id);
@@ -45,7 +46,7 @@ public class TelevisionController {
             return ResponseEntity.ok("Television " + id);
         }
     }
-
+    //POST voor 1 tv. Hfst. 5.6 EHUB.
     @PostMapping("")
     public ResponseEntity<Object> addTelevision(@RequestBody Television television) {
         televisionRepository.save(television);
@@ -55,7 +56,7 @@ public class TelevisionController {
                                   .path("/Television/" + television.getId()).toUriString());
 
         return ResponseEntity.created(uri).body("Television is added!");
-
+        //alternatief:
        // return ResponseEntity.ok("Television added");
     }
 
@@ -65,7 +66,7 @@ public class TelevisionController {
 
         return ResponseEntity.noContent().build();
     }
-
+    //PUT
     @PutMapping("{id}")
     public ResponseEntity<Object> updateTelevision(@PathVariable Long id, @RequestBody Television television) {
         Optional<Television> optionalTelevision = televisionRepository.findById((Long) id);

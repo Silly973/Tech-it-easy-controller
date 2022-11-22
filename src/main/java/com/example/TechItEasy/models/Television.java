@@ -30,7 +30,7 @@ import javax.persistence.*;
 //alle getters en setters
 
 @Entity
-@Table
+@Table //database
 public class Television {
     @Id
     @SequenceGenerator(
