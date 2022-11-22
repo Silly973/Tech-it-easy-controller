@@ -25,7 +25,6 @@ import javax.persistence.*;
 //Integer sold
 //default constructor
 //constructor
-
 //alle getters en setters
 
 @Entity
