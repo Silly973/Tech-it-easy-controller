@@ -13,5 +13,4 @@ public class ExeptionController {
     public ResponseEntity<Object>exception(RecordNotFoundException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
-
 }
