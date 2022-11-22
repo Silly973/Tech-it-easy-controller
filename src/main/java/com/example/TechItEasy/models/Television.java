@@ -23,7 +23,6 @@ import javax.persistence.*;
 //Boolean ambiLight
 //Integer originalStock
 //Integer sold
-
 //default constructor
 //constructor
 

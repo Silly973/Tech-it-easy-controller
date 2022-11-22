@@ -7,11 +7,9 @@ public class RecordNotFoundException extends RuntimeException {
 //Automatische boodschap als id wel of niet wordt gevonden:
 //private static final long serialVersionUID = 1L;
 public RecordNotFoundException(){
-
     super();
 }
 public RecordNotFoundException(String message){
-
     super(message);
 }
 
